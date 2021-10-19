@@ -58,6 +58,12 @@ namespace AcademyEFPersistence.Services
 			ctx.SaveChanges();
 			return corso;
 		}
+		public Course UpdateCourse(Course corso)
+        {
+			courseRepo.Update(corso);
+			ctx.SaveChanges();
+			return corso;
+        }
 
 		public IEnumerable<Course> GetLastCourses(int n)
 		{
@@ -121,6 +127,14 @@ namespace AcademyEFPersistence.Services
 			}
 			return editionRepo.Search(info).ToList();
 		}
+
+		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id)
+		{
+			var info = new EditionSearchInfo { CourseId = id };
+			var editions = editionRepo.Search(info);
+			return editions;
+		}
+
 		#endregion
 
 		#region Lesson

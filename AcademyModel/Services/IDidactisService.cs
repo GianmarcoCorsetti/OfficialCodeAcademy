@@ -37,8 +37,8 @@ namespace AcademyModel.Services
 
 		IEnumerable<Area> GetAllAreas();
 		Course CreateCourse(Course corso);
-
-		
-	}
+		Course UpdateCourse(Course corso);
+        IEnumerable<CourseEdition> GetEditionsByCourseId(long id);
+    }
 
 }

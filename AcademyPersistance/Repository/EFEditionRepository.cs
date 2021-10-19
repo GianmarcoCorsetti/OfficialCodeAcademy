@@ -28,31 +28,31 @@ namespace AcademyEFPersistance.Repository
 			return ctx.CourseEditions.Include( e => e.Course ).Include( e => e.Instructor ).SingleOrDefault ( e => e.Id == id );
 		}
 
-		public IEnumerable<CourseEdition> Search(EditionSearchInfo info)
+        public IEnumerable<CourseEdition> Search(EditionSearchInfo info)
 		{
 			LocalDate today = LocalDate.FromDateTime(new DateTime());
-			IEnumerable<CourseEdition> editions = new List<CourseEdition>();
+			IQueryable<CourseEdition> editions = ctx.CourseEditions;
 
 			if (info.Start != null || info.End != null)
 			{
 				if (info.Start != null)
 				{
-					editions = ctx.CourseEditions.Where(e => e.StartDate >= info.Start);
+					editions = editions.Where(e => e.StartDate >= info.Start);
 				}
 				if (info.End != null)
 				{
-					editions = ctx.CourseEditions.Where(e => e.FinalizationDate <= info.End);
+					editions = editions.Where(e => e.FinalizationDate <= info.End);
 				}
 			}			
 			else
 			{
 				if (info.InTheFuture == true)
 				{
-					editions = ctx.CourseEditions.Where(e => e.StartDate > today);
+					editions = editions.Where(e => e.StartDate > today);
 				}
 				else if (info.InThePast == true)
 				{
-					editions = ctx.CourseEditions.Where(e => e.StartDate < today);
+					editions = editions.Where(e => e.StartDate < today);
 				}
 			}
 
@@ -65,6 +65,10 @@ namespace AcademyEFPersistance.Repository
 			{
 				editions = editions.Where(e => e.Course.Title.Contains(info.TitleLike));
 			}
+            if (info.CourseId != null)
+            {
+				editions = editions.Where(e => e.Course.Id == e.CourseId);
+            }
 			return editions;
 		}
 	}

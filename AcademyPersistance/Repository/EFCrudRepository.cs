@@ -60,9 +60,10 @@ namespace AcademyEFPersistance.Repository
 			return entities.AsEnumerable();
 		}
 
-		public void Update(T newElement)
+		public T Update(T newElement)
 		{
 			entities.Update(newElement);
+			return newElement;
 			//int numChanges = ctx.SaveChanges();
 			//return numChanges > 0;
 		}

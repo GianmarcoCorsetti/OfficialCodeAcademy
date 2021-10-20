@@ -22,11 +22,16 @@ namespace AcademyModel.Services
 		IEnumerable<Course> GetAllCourses();
 		IEnumerable<Course> GetLastCourses(int n);
 		Course GetCourseById(long id);
+		Course CreateCourse(Course c);
+		Course UpdateCourse(Course c);
+		void DeleteCourse(Course c);
+		void DeleteCourse(long id);
 
 		IEnumerable<CourseEdition> GetAllEditions();
 		CourseEdition GetEditionById(long id);
 		CourseEdition EditCourseEdition(CourseEdition e);
 		void DeleteCourseEdition(long id);
+		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id);
 		IEnumerable<CourseEdition> Search(EditionSearchInfo info);
 
 
@@ -36,9 +41,9 @@ namespace AcademyModel.Services
 		IEnumerable<Lesson> FindLessonInRange(LocalDate start, LocalDate end);
 
 		IEnumerable<Area> GetAllAreas();
-		Course CreateCourse(Course corso);
-		Course UpdateCourse(Course corso);
-        IEnumerable<CourseEdition> GetEditionsByCourseId(long id);
-    }
+
+
+		
+	}
 
 }

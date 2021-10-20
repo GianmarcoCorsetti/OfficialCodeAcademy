@@ -19,5 +19,6 @@ namespace AcademyModel.Services
 		Enrollment EnrollSudentToEdition(EnrollData data);
 
 		Instructor GetInstructorById(long id);
+		IEnumerable<Instructor> GetInstructors();
 	}
 }

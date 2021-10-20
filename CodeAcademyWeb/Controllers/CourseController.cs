@@ -13,7 +13,8 @@ namespace CodeAcademyWeb.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class CourseController : Controller {
+	public class CourseController : Controller
+	{
 		private IDidactisService service;
 		private IMapper mapper;
 		public CourseController(IDidactisService service, IMapper mapper)
@@ -44,15 +45,40 @@ namespace CodeAcademyWeb.Controllers
 			var areaDTOs = mapper.Map<IEnumerable<AreaDTO>>(areas);
 			return Ok(areaDTOs);
 		}
-		[HttpGet]
-		[Route("{id}/editions")]
-		public IActionResult GetEditionsByCourseId(long id)
-        {
-			var editions = service.GetEditionsByCourseId(id);
-			var editionsDTO = mapper.Map<IEnumerable<CourseEditionDTO>>(editions);
-			return Ok(editionsDTO);
-        }
+		[HttpPost]
+		public IActionResult CreateCourse(CourseDTO courseDTO)
+		{
+			var course = mapper.Map<Course>(courseDTO);
+			course = service.CreateCourse(course);
+			var resDTO = mapper.Map<CourseDTO>(course);
+			return Created($"/api/courses/{resDTO.Id}", resDTO);
+		}
+		[HttpPut]
+		public IActionResult UpdateCourse(CourseDTO courseDTO)
+		{
+			var course = mapper.Map<Course>(courseDTO);
+			course = service.UpdateCourse(course);
+			var resDTO = mapper.Map<CourseDTO>(course);
+			return Created($"/api/courses/{resDTO.Id}", resDTO);
+		}
+		[HttpDelete]
+		public IActionResult RemoveCourse(CourseDTO courseDTO)
+		{
+			var course = mapper.Map<Course>(courseDTO);
+			service.DeleteCourse(course);
+			var resDTO = mapper.Map<CourseDTO>(course);
+			return Ok(resDTO);
+		}
 
+		[HttpDelete]
+		[Route("{id}")]
+		public IActionResult RemoveCourse(long id)
+		{
+			var course =service.GetCourseById(id);
+			service.DeleteCourse(id);
+			var resDTO = mapper.Map<CourseDTO>(course);
+			return Ok(resDTO);
+		}
 		public IActionResult GetLastNCurses(int n)
 		{
 			var courses = service.GetLastCourses(n);
@@ -60,24 +86,5 @@ namespace CodeAcademyWeb.Controllers
 			var courseDTOs = mapper.Map<IEnumerable<CourseDTO>>(courses);
 			return Ok(courseDTOs);
 		}
-		[HttpPost]
-		public IActionResult CreateCourse(CourseDTO courseDTO)
-        {
-            var course = mapper.Map<Course>(courseDTO);
-			course = service.CreateCourse(course);
-			var createdDTO = mapper.Map<CourseDTO>(course);
-			return Created($"api/course/{createdDTO.Id}", createdDTO);
-        }
-
-		[HttpPut]
-		[Route("{id}")]
-		public IActionResult UpdateCourse(CourseDTO courseDTO)
-        { 
-			var course = mapper.Map<Course>(courseDTO);
-			course = service.UpdateCourse(course);
-			var modifiedDTO = mapper.Map<CourseDTO>(course);
-			return Created($"api/course/{modifiedDTO.Id}", modifiedDTO);
-        }
 	}
 }
- 

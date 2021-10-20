@@ -86,5 +86,10 @@ namespace AcademyEFPersistance.Services
 		{
 			return instructorRepo.FindById(id);
 		}
+
+		public IEnumerable<Instructor> GetInstructors()
+		{
+			return instructorRepo.GetAll();
+		}
 	}
 }

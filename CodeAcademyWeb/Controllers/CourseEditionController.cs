@@ -52,10 +52,10 @@ namespace CodeAcademyWeb.Controllers
 				var courseEditionDTO = mapper.Map<CourseEditionDetailsDTO>(edition);
 				return Created($"/api/edition/{courseEditionDTO.Id}", courseEditionDTO);
 			}
-			catch(EntityNotFoundException ex)
+			catch (EntityNotFoundException ex)
 			{
 				return BadRequest(new ErrorObject(StatusCodes.Status400BadRequest, ex.Message));
-			}		
+			}
 		}
 		[HttpPut]
 		public IActionResult Edit(CourseEditionDetailsDTO e)
@@ -67,16 +67,16 @@ namespace CodeAcademyWeb.Controllers
 				var courseEditionDTO = mapper.Map<CourseEditionDetailsDTO>(edition);
 				return NoContent();
 			}
-			catch ( EntityNotFoundException ex )
+			catch (EntityNotFoundException ex)
 			{
-				switch(ex.EntityName)
+				switch (ex.EntityName)
 				{
 					case nameof(CourseEdition):
 						return NotFound(ex.Message);
 
 					default:
 						return BadRequest(new ErrorObject(StatusCodes.Status400BadRequest, ex.Message));
-				}				
+				}
 			}
 		}
 		[Route("{id}")]
@@ -88,10 +88,18 @@ namespace CodeAcademyWeb.Controllers
 				service.DeleteCourseEdition(id);
 				return NoContent();
 			}
-			catch ( EntityNotFoundException ex)
+			catch (EntityNotFoundException ex)
 			{
 				return NotFound(new ErrorObject(StatusCodes.Status404NotFound, ex.Message));
 			}
+		}
+		[HttpGet]
+		[Route("course/{id}")]
+		public IActionResult GetEditionsByCourseId(long id)
+		{
+			var editions = service.GetEditionsByCourseId(id);
+			var editionDTOs = mapper.Map<IEnumerable<CourseEditionDTO>>(editions);
+			return Ok(editionDTOs);
 		}
 	}
 }

@@ -52,18 +52,33 @@ namespace AcademyEFPersistence.Services
 		{
 			return courseRepo.FindById(id);
 		}
-		public Course CreateCourse(Course corso)
+		public Course CreateCourse(Course c)
 		{
-			courseRepo.Create(corso);
+			var res = courseRepo.Create(c);
 			ctx.SaveChanges();
-			return corso;
+			return res;
 		}
-		public Course UpdateCourse(Course corso)
-        {
-			courseRepo.Update(corso);
+		public void DeleteCourse(Course c)
+		{
+			courseRepo.Delete(c);
 			ctx.SaveChanges();
-			return corso;
-        }
+		}
+		public void DeleteCourse(long id)
+		{
+			courseRepo.Delete(id);
+			ctx.SaveChanges();
+		}
+		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id)
+		{
+			return editionRepo.GetEditionsByCourseId(id);
+		}
+
+		public Course UpdateCourse(Course c)
+		{
+			var res = courseRepo.Update(c);
+			ctx.SaveChanges();
+			return res;
+		}
 
 		public IEnumerable<Course> GetLastCourses(int n)
 		{
@@ -127,14 +142,6 @@ namespace AcademyEFPersistence.Services
 			}
 			return editionRepo.Search(info).ToList();
 		}
-
-		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id)
-		{
-			var info = new EditionSearchInfo { CourseId = id };
-			var editions = editionRepo.Search(info);
-			return editions;
-		}
-
 		#endregion
 
 		#region Lesson
@@ -183,7 +190,10 @@ namespace AcademyEFPersistence.Services
 			return courseEdition;
 		}
 
-        #endregion
+		
 
-    }
+
+		#endregion
+
+	}
 }

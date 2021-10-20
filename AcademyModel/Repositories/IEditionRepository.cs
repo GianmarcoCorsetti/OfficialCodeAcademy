@@ -13,7 +13,7 @@ namespace AcademyModel.Repositories
 		// corsi futuri | corisi passati | corsi in range tra a e b |
 		// corsi futuri su id instructor | corisi passati su id instructor | corsi in range tra a e b su id instructor |
 		// ricerca like su titolo e in range tra a e b
+		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id);
 		IEnumerable<CourseEdition> Search(EditionSearchInfo info);
-
 	}
 }

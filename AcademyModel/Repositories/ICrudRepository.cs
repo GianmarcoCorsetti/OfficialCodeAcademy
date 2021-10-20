@@ -11,7 +11,7 @@ namespace AcademyModel.Repositories
 		T Create(T newElement);
 		void Delete(T element);
 		void Delete(K key);
-		void Update(T newElement);
+		T Update(T newElement);
 		T FindById(K key);
 		IEnumerable<T> GetAll();
 	}

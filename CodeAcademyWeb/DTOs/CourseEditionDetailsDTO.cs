@@ -12,7 +12,7 @@ namespace CodeAcademyWeb.DTOs
 		public string Code { get; set; }
 		public string Description { get; set; }
 		public string StartDate { get; set; } 
-		public string FinalizationDate { get; set; } 
+		public string EndDate { get; set; } 
 		public decimal RealPrice { get; set; }
 		public long CourseId { get; set; }
 		public string CourseTitle { get; set; }

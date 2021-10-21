@@ -1,5 +1,6 @@
 ﻿using AcademyEFPersistance.EFContext;
 using AcademyModel.BuisnessLogic;
+using AcademyModel.BusinessLogic;
 using AcademyModel.Entities;
 using AcademyModel.Exceptions;
 using AcademyModel.Repositories;
@@ -68,29 +69,35 @@ namespace AcademyEFPersistence.Services
 			courseRepo.Delete(id);
 			ctx.SaveChanges();
 		}
-		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id)
-		{
-			return editionRepo.GetEditionsByCourseId(id);
-		}
-
 		public Course UpdateCourse(Course c)
 		{
 			var res = courseRepo.Update(c);
 			ctx.SaveChanges();
 			return res;
 		}
-
 		public IEnumerable<Course> GetLastCourses(int n)
 		{
 			return courseRepo.GetLastCourses(n);
 		}
 		#endregion
 
+
 		#region CourseEditions
-		public IEnumerable<CourseEdition> GetAllEditions()
+		public IEnumerable<CourseEdition> FindEditions( EditionSearchInfo info )
 		{
-			return editionRepo.GetAll();
+			IntegrityCheck(info);
+			return editionRepo.Search(info).ToList();
 		}
+
+		public IEnumerable<CourseEdition> FindEditionsDetailed (EditionSearchInfoDetails infoDetails)
+        {
+			IntegrityCheckDetailed(infoDetails);
+			return editionRepo.SearchDetailed(infoDetails).ToList();
+        }
+		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id)
+        {
+			return editionRepo.GetEditionsByCourseId(id);
+        }
 		public CourseEdition GetEditionById(long id)
 		{
 			return editionRepo.FindById(id);
@@ -118,13 +125,13 @@ namespace AcademyEFPersistence.Services
 			editionRepo.Delete(edition);
 			ctx.SaveChanges();
 		}
-		public IEnumerable<CourseEdition> Search(EditionSearchInfo info)
+		private void IntegrityCheck(EditionSearchInfo info)
 		{
 			if (info.Start != null || info.End != null)
 			{
 				if (info.InTheFuture != null || info.InThePast != null)
 				{
-					throw new BuinsnessLogicException("I criteri di ricerca non possono comprende  allo stesso tempo date e richiesta su futuro e passato");
+					throw new BuinsnessLogicException("I criteri di ricerca non possono comprendere allo stesso tempo date e richiesta su futuro e passato");
 				}
 			}
 
@@ -140,8 +147,73 @@ namespace AcademyEFPersistence.Services
 			{
 				throw new BuinsnessLogicException("Non è possibile richiedere edizioni sia nel passatro che nel futuro");
 			}
+		}
+
+		private void IntegrityCheckDetailed(EditionSearchInfoDetails infoDetailed)
+        {
+			// controllo che la StartDate sia prima della EndDate
+			if (infoDetailed.StartDate != null && infoDetailed.EndDate != null)
+			{
+				if (infoDetailed.StartDate > infoDetailed.EndDate)
+				{
+					throw new BuinsnessLogicException("La data di inizio non può essere successiva a quella di fine");
+				}
+			}
+			// controllo che il minPrice e il maxPrice siano coerenti
+			if( infoDetailed.MinPrice != null && infoDetailed.MinPrice != null)
+            {
+				if(infoDetailed.MinPrice > infoDetailed.MinPrice)
+                {
+					throw new BuinsnessLogicException("Il costo massimo non può essere più grande del costo minimo");
+                }
+            }
+			// controllo sul fullName
+			if( infoDetailed.InstructorFullName != null)
+            {
+				if (infoDetailed.InstructorFullName.Split(" ").Length > 2)
+				{
+					throw new BuinsnessLogicException("Il nome completo non può avere più di due parole");
+
+				}
+			}
+		}
+
+		public IEnumerable<CourseEdition> GetEditionsByInstructorId(long id) // Funziona
+		{
+            var info = new EditionSearchInfo
+            {
+                InstructorId = id
+            };
+            return editionRepo.Search(info).ToList();
+        }
+
+		public IEnumerable<CourseEdition> GetEditionsByIntervall(LocalDate start, LocalDate end)
+		{
+            var info = new EditionSearchInfo
+            {
+                Start = start,
+                End = end
+            };
+            return editionRepo.Search(info).ToList();
+		}
+
+		public IEnumerable<CourseEdition> GetEditionsByFutureOrPast(bool isFuture)
+		{
+			// se isFuture è vero	: cerco edizioni future
+			// se isFuture è falso	: cerco edizioni passate
+			var info = new EditionSearchInfo();
+			if (isFuture)
+			{
+				info.InTheFuture = true;
+
+			}
+			else
+			{
+				info.InThePast = true;
+			}
 			return editionRepo.Search(info).ToList();
 		}
+
 		#endregion
 
 		#region Lesson
@@ -190,10 +262,11 @@ namespace AcademyEFPersistence.Services
 			return courseEdition;
 		}
 
-		
+        public IEnumerable<CourseEdition> GetAllEditions()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
 
-
-		#endregion
-
-	}
+    }
 }

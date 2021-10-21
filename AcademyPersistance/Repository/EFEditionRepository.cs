@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using AcademyModel.BuisnessLogic;
 using NodaTime;
 using AcademyEFPersistance.EFContext;
+using AcademyModel.BusinessLogic;
 
 namespace AcademyEFPersistance.Repository
 {
@@ -30,35 +31,35 @@ namespace AcademyEFPersistance.Repository
 
 		public IEnumerable<CourseEdition> Search(EditionSearchInfo info)
 		{
-			LocalDate today = LocalDate.FromDateTime(new DateTime());
+			LocalDate today = LocalDate.FromDateTime(DateTime.Now);
 			IQueryable<CourseEdition> editions = ctx.CourseEditions;
 
 			if (info.Start != null || info.End != null)
 			{
 				if (info.Start != null)
 				{
-					editions = ctx.CourseEditions.Where(e => e.StartDate >= info.Start);
+					editions = editions.Where(e => e.StartDate >= info.Start);
 				}
 				if (info.End != null)
 				{
-					editions = ctx.CourseEditions.Where(e => e.FinalizationDate <= info.End);
+					editions = editions.Where(e => e.FinalizationDate <= info.End);
 				}
 			}			
 			else
 			{
 				if (info.InTheFuture == true)
 				{
-					editions = ctx.CourseEditions.Where(e => e.StartDate > today);
+					editions = editions.Where(e => e.StartDate > today);
 				}
 				else if (info.InThePast == true)
 				{
-					editions = ctx.CourseEditions.Where(e => e.StartDate < today);
+					editions = editions.Where(e => e.StartDate < today);
 				}
 			}
 
 			if (info.InstructorId != null)
 			{
-				editions = editions.Where(e => e.Id == info.InstructorId );
+				editions = editions.Where(e => e.InstructorId == info.InstructorId );
 			}
 
 			if (!String.IsNullOrEmpty(info.TitleLike))
@@ -67,9 +68,68 @@ namespace AcademyEFPersistance.Repository
 			}
 			return editions;
 		}
+
 		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id)
 		{
 			return ctx.CourseEditions.Where(e => e.CourseId == id);
 		}
-	}
+
+        public IEnumerable<CourseEdition> SearchDetailed(EditionSearchInfoDetails infoDetailed)
+        {
+			LocalDate today = LocalDate.FromDateTime(DateTime.Now);
+			IQueryable<CourseEdition> editions = ctx.CourseEditions;
+			// controllo sull'intervallo di date
+			if (infoDetailed.StartDate != null || infoDetailed.EndDate != null)
+			{
+				if (infoDetailed.StartDate != null)
+				{
+					editions = editions.Where(e => e.StartDate >= infoDetailed.StartDate);
+				}
+				if (infoDetailed.EndDate != null)
+				{
+					editions = editions.Where(e => e.FinalizationDate <= infoDetailed.EndDate);
+				}
+			}
+			// controllo sul codice
+			if (infoDetailed.Code != null)
+            {
+				editions = editions.Where(e => e.Code == infoDetailed.Code);
+            }
+			// controllo sul prezzo 
+			if( infoDetailed.MaxPrice != null || infoDetailed.MinPrice != null)
+            {
+				if(infoDetailed.MinPrice != null)
+                {
+					editions = editions.Where(e => e.RealPrice >= infoDetailed.MinPrice);
+                }
+				if(infoDetailed.MinPrice != null)
+                {
+					editions = editions.Where(e => e.RealPrice <= infoDetailed.MaxPrice);
+				}
+            }
+			// controllo sul titolo del corso di cui possono fare parte le edizioni
+			if( infoDetailed.CourseTitle != null)
+            {
+				editions = editions.Where(e => e.Course.Title.Contains(infoDetailed.CourseTitle));
+            }
+			// controllo sul Nome dell'istruttore
+			if( infoDetailed.InstructorFirstname != null)
+            {
+				editions = editions.Where(e => e.Instructor.Firstname == infoDetailed.InstructorFirstname || e.Instructor.Firstname.Contains(infoDetailed.InstructorFirstname));
+            }
+			// controllo sul cognome dell'istruttore
+			if( infoDetailed.InstructorLastname != null)
+            {
+				editions = editions.Where(e => e.Instructor.Lastname == infoDetailed.InstructorLastname || e.Instructor.Lastname.Contains(infoDetailed.InstructorLastname));
+			}
+			// controllo più gnerale riguardante il nome completo per avere più possibilità di trovare il nome dell'insegnante
+			if(infoDetailed.InstructorFullName != null){
+				string[] nomeScomposto = infoDetailed.InstructorFullName.Split(" ");
+				editions = editions.Where(e => 
+				(e.Instructor.Firstname == nomeScomposto[0] || e.Instructor.Lastname.Contains(nomeScomposto[0]))
+				||(e.Instructor.Lastname == nomeScomposto[1] || e.Instructor.Lastname.Contains(nomeScomposto[1])));
+			}
+			return editions;
+		}
+    }
 }

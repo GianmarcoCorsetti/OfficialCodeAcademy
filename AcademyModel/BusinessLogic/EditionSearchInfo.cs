@@ -17,12 +17,15 @@ namespace AcademyModel.BuisnessLogic
 		public string TitleLike { get; set; }
 
 		public EditionSearchInfo(){ }
-		public EditionSearchInfo(long? instructorId, LocalDate? start, LocalDate? end, bool? inTheFuture, bool? inThePast, string titleLike) 
-		{
-			End = end;
-			InTheFuture = inTheFuture;
-			InThePast = inThePast;
-			TitleLike = titleLike;
-		}
-	}
+
+        public EditionSearchInfo(long? instructorId, LocalDate? start, LocalDate? end, bool? inTheFuture, bool? inThePast, string titleLike)
+        {
+            InstructorId = instructorId;
+            Start = start;
+            End = end;
+            InTheFuture = inTheFuture;
+            InThePast = inThePast;
+            TitleLike = titleLike;
+        }
+    }
 }

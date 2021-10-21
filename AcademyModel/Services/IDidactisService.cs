@@ -1,5 +1,6 @@
 ﻿//using SchoolModel.BuisnessLogic;
 using AcademyModel.BuisnessLogic;
+using AcademyModel.BusinessLogic;
 using AcademyModel.Entities;
 using NodaTime;
 using System;
@@ -28,18 +29,20 @@ namespace AcademyModel.Services
 		void DeleteCourse(long id);
 
 		IEnumerable<CourseEdition> GetAllEditions();
+		IEnumerable<CourseEdition> GetEditionsByCourseId(long id);
 		CourseEdition GetEditionById(long id);
 		CourseEdition EditCourseEdition(CourseEdition e);
 		void DeleteCourseEdition(long id);
-		public IEnumerable<CourseEdition> GetEditionsByCourseId(long id);
-		IEnumerable<CourseEdition> Search(EditionSearchInfo info);
+		public IEnumerable<CourseEdition> GetEditionsByInstructorId(long id);
+		public IEnumerable<CourseEdition> GetEditionsByIntervall(LocalDate start, LocalDate end);
+		public IEnumerable<CourseEdition> GetEditionsByFutureOrPast(bool futureOrPast );
 
 
-		
 
 		IEnumerable<Lesson> FindLessonForEditionId(long id);
 		IEnumerable<Lesson> FindLessonInRange(LocalDate start, LocalDate end);
-
+        IEnumerable<CourseEdition> FindEditions(EditionSearchInfo info);
+		IEnumerable<CourseEdition> FindEditionsDetailed(EditionSearchInfoDetails info);
 		IEnumerable<Area> GetAllAreas();
 
 

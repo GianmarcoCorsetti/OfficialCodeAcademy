@@ -14,6 +14,7 @@ namespace AcademyModel.BusinessLogic {
 		public LocalDate? EndDate { get; set; }
 		public decimal? MinPrice{ get; set; }
         public decimal? MaxPrice{ get; set; }
+        public int? Duration { get; set; }
         public long? CourseId { get; set; }
 		public string CourseTitle { get; set; }
 		public long? InstructorId { get; set; }
@@ -23,7 +24,7 @@ namespace AcademyModel.BusinessLogic {
 
 		public EditionSearchInfoDetails() { }
 
-        public EditionSearchInfoDetails(long? id, string code, string description, LocalDate? startDate, LocalDate? endDate, 
+        public EditionSearchInfoDetails(long? id, string code, string description, LocalDate? startDate, LocalDate? endDate, int? duration,
                                         decimal? minPrice, decimal? maxPrice, long? courseId, string courseTitle, long? instructorId, 
                                         string instructorFullName, string instructorFirstname, string instructorLastname)
         {
@@ -34,6 +35,7 @@ namespace AcademyModel.BusinessLogic {
             EndDate = endDate;
             MinPrice = minPrice;
             MaxPrice = maxPrice;
+            Duration = duration;
             CourseId = courseId;
             CourseTitle = courseTitle;
             InstructorId = instructorId;

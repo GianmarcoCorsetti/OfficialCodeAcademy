@@ -95,18 +95,33 @@ namespace AcademyEFPersistance.Repository
             {
 				editions = editions.Where(e => e.Code == infoDetailed.Code);
             }
-			// controllo sul prezzo 
-			if( infoDetailed.MaxPrice != null || infoDetailed.MinPrice != null)
+			// controllo sull'id del corso
+			if( infoDetailed.CourseId != null)
+            {
+				editions = editions.Where(e => e.CourseId == infoDetailed.CourseId);
+			}
+            //controllo sulla durata complessiva del corso
+            //if (infoDetailed.Duration != null)  // basta passare il JSON con tutte le informazioni e fare un filtro JS, qui non mi sembra che possa andare bene
+            //{
+            //    editions = editions.Where(e => (e.FinalizationDate - e.StartDate).Days.CompareTo(infoDetailed.Duration) > 1);
+            //}
+            // controllo sul prezzo 
+            if ( infoDetailed.MaxPrice != null || infoDetailed.MinPrice != null)
             {
 				if(infoDetailed.MinPrice != null)
                 {
 					editions = editions.Where(e => e.RealPrice >= infoDetailed.MinPrice);
                 }
-				if(infoDetailed.MinPrice != null)
+				if(infoDetailed.MaxPrice != null)
                 {
 					editions = editions.Where(e => e.RealPrice <= infoDetailed.MaxPrice);
 				}
             }
+			// controllo sull'id dell'istruttore
+			if( infoDetailed.InstructorId != null)
+            {
+				editions = editions.Where(e => e.InstructorId == infoDetailed.InstructorId);
+			}
 			// controllo sul titolo del corso di cui possono fare parte le edizioni
 			if( infoDetailed.CourseTitle != null)
             {

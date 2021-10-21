@@ -46,7 +46,7 @@ namespace CodeAcademyWeb.Controllers
         }
 		[HttpGet]
 		[Route("searchDTO")]
-		public IActionResult FindEditionDTO([FromQuery] long? id, string code, string description, LocalDate? startDate, LocalDate? endDate, int? duration,
+		public IActionResult FindEditionDTO([FromQuery] long? id, string code, string description, LocalDate? startDate, LocalDate? endDate,
 														decimal? minPrice,decimal? maxPrice,  long? courseId, string courseTitle, long? instructorId, 
 														string instructorFullName, string instructorFirstname, string instructorLastname)
         {
@@ -57,7 +57,6 @@ namespace CodeAcademyWeb.Controllers
 				Description = description,
 				StartDate = startDate,
 				EndDate = endDate,
-				Duration = duration,
 				MinPrice = minPrice,
 				MaxPrice = maxPrice,
 				CourseId = courseId,

@@ -20,9 +20,7 @@ namespace AcademyModel.BusinessLogic {
 		public string InstructorFullName { get; set; }
 		public string InstructorFirstname { get; set; }
 		public string InstructorLastname { get; set; }
-
 		public EditionSearchInfoDetails() { }
-
         public EditionSearchInfoDetails(long? id, string code, string description, LocalDate? startDate, LocalDate? endDate,
                                         decimal? minPrice, decimal? maxPrice, long? courseId, string courseTitle, long? instructorId, 
                                         string instructorFullName, string instructorFirstname, string instructorLastname)

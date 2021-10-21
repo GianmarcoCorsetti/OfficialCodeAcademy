@@ -93,7 +93,7 @@ namespace AcademyEFPersistance.Repository
 			// controllo sul codice
 			if (infoDetailed.Code != null)
             {
-				editions = editions.Where(e => e.Code == infoDetailed.Code);
+				editions = editions.Where(e => e.Code == infoDetailed.Code || e.Code.Contains(infoDetailed.Code));
             }
 			// controllo sull'id del corso
 			if( infoDetailed.CourseId != null)

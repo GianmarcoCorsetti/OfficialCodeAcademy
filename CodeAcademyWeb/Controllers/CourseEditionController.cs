@@ -46,9 +46,9 @@ namespace CodeAcademyWeb.Controllers
         }
 		[HttpGet]
 		[Route("searchDTO")]
-		public IActionResult FindEditionDTO([FromQuery] long? id, string code, string description, LocalDate? startDate, LocalDate? endDate,
-														decimal? minPrice,decimal? maxPrice,  long? courseId, string courseTitle, long? instructorId, 
-														string instructorFullName, string instructorFirstname, string instructorLastname)
+		public IActionResult FindEditionDTO([FromQuery] long? id, [FromQuery] string code, [FromQuery] string description, [FromQuery] LocalDate? startDate, [FromQuery] LocalDate? endDate,
+														[FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice, [FromQuery] long? courseId, [FromQuery] string courseTitle, [FromQuery] long? instructorId,
+														[FromQuery] string instructorFullName, [FromQuery] string instructorFirstname, [FromQuery] string instructorLastname)
         {
 			var infoDetails = new EditionSearchInfoDetails
 			{
@@ -69,7 +69,6 @@ namespace CodeAcademyWeb.Controllers
 			var editions = service.FindEditionsDetailed(infoDetails);
 			var editionDTOs = mapper.Map<IEnumerable<CourseEditionDetailsDTO>>(editions);
 			return Ok(editionDTOs);
-
 		}
 		[Route("{id}")]
 		[HttpGet]
